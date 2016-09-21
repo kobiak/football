@@ -1,0 +1,233 @@
+html,
+body {
+    font-size: 16px;
+    counter-reset: my-awesome-counter;
+}
+
+header {
+    background-color: #333333;
+    box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.2);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+.top-nav {
+    display: flex;
+    height: 3.000rem;
+}
+
+.top-nav > a {
+    width: 3.000rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #999999;
+    text-decoration: none;
+    font-size: 1.6rem;
+}
+
+.second-nav a {
+    color: #f0f0f0;
+    text-decoration: none;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+}
+
+.second-nav li {
+    transition: all 0.5s ease-in-out;
+    border-bottom: 3px solid #333333;
+}
+
+.second-nav li.active {
+    border-bottom: 3px solid #f0f0f0;
+}
+
+nav ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: scroll;
+}
+
+nav ul li {
+    width: 25%;
+    flex: 0 0 auto;
+    height: 2.375rem;
+    color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    font-size: 0.75rem;
+}
+
+.league-name {
+    color: #f0f0f0;
+    text-transform: uppercase;
+    font-size: 1rem;
+    flex: 1 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+
+.table {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.75rem;
+}
+
+.table-header {
+    display: flex;
+    font-size: 0.75rem;
+    background-color: #f0f0f0;
+    color: #333333;
+    padding: 0.5em 0;
+}
+
+.table-header div {
+    flex: 0 0 auto;
+    width: 1.6rem;
+    max-height: 1.250rem;
+}
+
+.table-header div:first-child {
+    flex: 1 1 auto;
+}
+
+.row {
+    display: flex;
+    align-content: stretch;
+    border-top: 1px solid #eeeeee;
+    padding: 0.5em 0;
+    counter-increment: my-awesome-counter;
+}
+
+.row:last-child {
+    border-bottom: 1px solid #eeeeee;
+}
+
+.row:before {
+    content: counter(my-awesome-counter);
+    width: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.row > div {
+    flex: 0 0 auto;
+    width: 1.6rem;
+    display: flex;
+    align-items: center;
+}
+
+.row .team-name {
+    flex: 1;
+}
+
+.logo {}
+
+.logo img {
+    width: 100%;
+    height: auto;
+    max-width: 1.250rem;
+    max-height: 1.250rem;
+}
+
+.overlay {
+    position: relative;
+}
+
+.overlay-box {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(255, 255, 255, 0.95);
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+.loader {
+    left: 50%;
+    top: 50%;
+    position: fixed;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+.loader #spinner {
+    box-sizing: border-box;
+    stroke: #333333;
+    stroke-width: 3px;
+    -webkit-transform-origin: 50%;
+    transform-origin: 50%;
+    -webkit-animation: line 1.6s cubic-bezier(0.4, 0, 0.2, 1) infinite, rotate 1.6s linear infinite;
+    animation: line 1.6s cubic-bezier(0.4, 0, 0.2, 1) infinite, rotate 1.6s linear infinite;
+}
+
+@-webkit-keyframes rotate {
+    from {
+        -webkit-transform: rotate(0);
+        transform: rotate(0);
+    }
+    to {
+        -webkit-transform: rotate(450deg);
+        transform: rotate(450deg);
+    }
+}
+
+@keyframes rotate {
+    from {
+        -webkit-transform: rotate(0);
+        transform: rotate(0);
+    }
+    to {
+        -webkit-transform: rotate(450deg);
+        transform: rotate(450deg);
+    }
+}
+
+@-webkit-keyframes line {
+    0% {
+        stroke-dasharray: 2, 85.964;
+        -webkit-transform: rotate(0);
+        transform: rotate(0);
+    }
+    50% {
+        stroke-dasharray: 65.973, 21.9911;
+        stroke-dashoffset: 0;
+    }
+    100% {
+        stroke-dasharray: 2, 85.964;
+        stroke-dashoffset: -65.973;
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+    }
+}
+
+@keyframes line {
+    0% {
+        stroke-dasharray: 2, 85.964;
+        -webkit-transform: rotate(0);
+        transform: rotate(0);
+    }
+    50% {
+        stroke-dasharray: 65.973, 21.9911;
+        stroke-dashoffset: 0;
+    }
+    100% {
+        stroke-dasharray: 2, 85.964;
+        stroke-dashoffset: -65.973;
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+    }
+}
