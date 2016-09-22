@@ -2,6 +2,9 @@ html,
 body {
     font-size: 16px;
     counter-reset: my-awesome-counter;
+    background-color: #f9f9f9;
+    
+    position: relative;
 }
 
 header {
@@ -26,6 +29,11 @@ header {
     color: #999999;
     text-decoration: none;
     font-size: 1.6rem;
+}
+
+.second-nav,
+.top-nav > a.update-table {
+    display: none;
 }
 
 .second-nav a {
@@ -67,6 +75,86 @@ nav ul li {
     font-size: 0.75rem;
 }
 
+.side-menu {
+    position: fixed;
+    width: 70%;
+    max-width: 300px;
+    left: 0;
+    top: 0;
+    margin: 0;
+    transform: translateX(-100%);
+    height: 100%;
+    background-color: #fff;
+    z-index: 1001;
+    backface-visibility: hidden;
+    overflow-y: auto;
+    will-change: transform;
+    transition: all 0.3s ease-in-out;
+}
+
+.side-menu ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.side-menu ul li {
+    border-top: 1px solid #eee;
+}
+
+.side-menu ul li a {
+    border: none;
+    color: #333;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    text-decoration: none;
+    display: block;
+    padding: 0.5rem 1rem;
+}
+
+.side-menu.open {
+    transform: translateX(0%);
+}
+
+.side-menu ul li:first-child {
+    border-top: none;
+}
+
+.home-screen {
+    padding: 1rem;
+}
+
+.home-screen h1 {
+    margin: 0;
+    padding: 0;
+}
+
+.select-league a {
+    display: block;
+    text-decoration: none;
+    border: 1px solid #f0f0f0;
+    background-color: #ffffff;
+    border-radius: 2px;
+    padding: 0.5rem 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
+    display: flex;
+    justify-content: center;
+}
+
+.select-league a img {
+    max-height: 48px;
+    width: auto;
+}
+
+.select-league a:hover {
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+}
+
 .league-name {
     color: #f0f0f0;
     text-transform: uppercase;
@@ -82,6 +170,7 @@ nav ul li {
     display: flex;
     flex-direction: column;
     font-size: 0.75rem;
+    background-color: #ffffff;
 }
 
 .table-header {
@@ -144,6 +233,7 @@ nav ul li {
 
 .overlay {
     position: relative;
+    height: calc(100% + 89px);
 }
 
 .overlay-box {
@@ -230,4 +320,15 @@ nav ul li {
         -webkit-transform: rotate(90deg);
         transform: rotate(90deg);
     }
+}
+
+.page-overlay {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: calc(100% + 89px);
+    width: 100%;
+    z-index: 1000;
+    background-color: rgba(0, 0, 0, 0.6);
 }

@@ -1,10 +1,12 @@
-var cacheName = 'football-5';
-var dataCacheName = 'football-v5';
+var cacheName = 'football-6';
+var dataCacheName = 'football-v6';
 
 var filesToCache = [
     '/',
     '/index.html',
     '/style.css',
+    'https://upload.wikimedia.org/wikipedia/en/f/f2/Premier_League_Logo.svg',
+    'https://upload.wikimedia.org/wikipedia/commons/9/92/LaLiga_Santander.svg'   
 
 ];
 
