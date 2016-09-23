@@ -1,5 +1,7 @@
 $(document).ready(function () {
 
+    'use strict';
+
     $('body').css('padding-top', $('header').outerHeight());
 
     $('.second-nav a').on('click touch', function (e) {
@@ -8,9 +10,35 @@ $(document).ready(function () {
         $(this).parent().addClass('active');
     });
 
+    var loadLeagues = true;
+    var loadLegaueTable = true;
+
+    //function getCookie        
+    function getCookie(cname) {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') c = c.substring(1);
+            if (c.indexOf(name) != -1) return c.substring(name.length, c.length);
+        }
+        return "";
+    };
+
+    //get cookie 
+    var cookiename = getCookie("load-leagues");
+    if (cookiename == "false") {
+        loadLeagues = false
+    };
+
+    var cookiename = getCookie("load-table-" + dataTablePref);
+    if (cookiename == "false") {
+        loadLegaueTable = false
+    };
+
     // load leagues
 
-    if (localStorage.getItem('Leagues') !== null) {
+    if ((localStorage.getItem('Leagues') !== null) && (!loadLeagues)) {
 
         console.log('use localstorage');
 
@@ -52,6 +80,12 @@ $(document).ready(function () {
                     $('.select-league').append('<a href="#" data-table-url="' + link + '" data-table-pref="' + leagueName + '">' + name + '</a>');
 
                 });
+
+                var date = new Date();
+                date.setTime(date.getTime() + (30 * 24 * 60 * 60 * 1000));
+                date.toGMTString();
+
+                document.cookie = "load-leagues=false;  path=/; expires=" + date + ";"
             },
             beforeSend: function () {
 
@@ -66,7 +100,8 @@ $(document).ready(function () {
                 $('.overlay-box').remove();
             },
             error: function () {
-                console.error('error ajax call');
+                $('.home-screen').hide();
+                $('body').append('<section class="offline"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i><h3>API server is offline :(</h3></section>');
             }
 
         });
@@ -84,7 +119,7 @@ $(document).ready(function () {
     function showTableData() {
         $('.table-data').show();
 
-        if (localStorage.getItem(dataTablePref) !== null) {
+        if ((localStorage.getItem(dataTablePref) !== null) && (!loadLegaueTable)) {
 
             console.log('use localstorage');
 
@@ -116,33 +151,19 @@ $(document).ready(function () {
         showHideMenu()
     });
 
-    $('.home-button').on('click touch', function () {
+    $('.home-button').on('click touch', function (e) {
+        e.preventDefault();
         $('.league-name').html('');
         $('.home-screen').show();
         $('.home-screen').next('section').hide();
         showHideMenu();
-        $('.update-table').css('display','none');
+        $('.update-table').css('display', 'none');
+
+        if ($('body').hasClass('offline-page')) {
+            e.stopPropagation();
+            document.location.href = "/";
+        };
     });
-
-    /* var runScript = true;    
-
-     //function getCookie        
-     function getCookie(cname) {
-         var name = cname + "=";
-         var ca = document.cookie.split(';');
-         for (var i = 0; i < ca.length; i++) {
-             var c = ca[i];
-             while (c.charAt(0) == ' ') c = c.substring(1);
-             if (c.indexOf(name) != -1) return c.substring(name.length, c.length);
-         }
-         return "";
-     };
-
-     //get cookie 
-     var cookiename = getCookie("updated");
-     if (cookiename == "true") {
-         runScript = false
-     };*/
 
     function buildTable() {
         // clear table
@@ -165,11 +186,15 @@ $(document).ready(function () {
                 totalPoints = appData.standing[index].points,
                 goalDifference = appData.standing[index].goalDifference;
 
+            if (logo === "null") {
+                logo = '/images/default.png';
+            };
+
             $('.table').append('<div class="row"><div class="logo"><img src="' + logo + '"></div><div class="team-name">' + name + '</div><div>' + gamesPlayed + '</div><div>' + gamesWin + '</div><div>' + gamesDraw + '</div><div>' + gamesLost + '</div><div>' + goalDifference + '</div><div>' + totalPoints + '</div></div>');
 
         });
-        
-        $('.update-table').css('display','flex');
+
+        $('.update-table').css('display', 'flex');
     };
 
     function runAjaxCall() {
@@ -188,6 +213,12 @@ $(document).ready(function () {
                 console.log('use ajax');
 
                 buildTable();
+
+                var date = new Date();
+                date.setTime(date.getTime() + (1 * 24 * 60 * 60 * 1000));
+                date.toGMTString();
+
+                document.cookie = "load-table-" + dataTablePref + "=false;  path=/; expires=" + date + ";"
             },
             beforeSend: function () {
 
@@ -215,11 +246,11 @@ $(document).ready(function () {
         runAjaxCall();
     });
 
-    /* if ('serviceWorker' in navigator) {
-         navigator.serviceWorker
-             .register('service-worker.js')
-             .then(function () {
-                 console.log('Service Worker Registered');
-             });
-     };*/
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker
+            .register('service-worker.js')
+            .then(function () {
+                console.log('Service Worker Registered');
+            });
+    };
 });
