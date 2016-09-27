@@ -13,24 +13,6 @@ $(document).ready(function () {
     var loadLeagues = true;
     var loadLegueTable = true;
 
-    //function getCookie        
-    function getCookie(cname) {
-        var name = cname + "=";
-        var ca = document.cookie.split(';');
-        for (var i = 0; i < ca.length; i++) {
-            var c = ca[i];
-            while (c.charAt(0) == ' ') c = c.substring(1);
-            if (c.indexOf(name) != -1) return c.substring(name.length, c.length);
-        }
-        return "";
-    };
-
-    //get cookie 
-    var cookienameLeagues = getCookie("load-leagues");
-    if (cookienameLeagues == "false") {
-        loadLeagues = false        
-    };
-
     var $appBox = $('.app-box');
     var $introScreen = '<section class="intro-screen"><h1>Football Results</h1><p>Please select league:</p></section>';
     var $leagueScreen = '<section class="league-screen"><div class="select-league"></div></section>';
@@ -39,6 +21,18 @@ $(document).ready(function () {
 
     function tableScreen() {
         // load leagues
+
+        if (document.cookie && document.cookie.indexOf('LoadLeagues=1') != -1) {
+
+            loadLeagues = false;
+            console.log('cookie');
+
+        } else {
+
+            console.log('cookie expired');
+            loadLeagues = true;
+
+        };
 
         if ((localStorage.getItem('Leagues') !== null) && (!loadLeagues)) {
 
@@ -93,11 +87,10 @@ $(document).ready(function () {
 
                     });
 
-                    var date = new Date();
-                    date.setTime(date.getTime() + (30 * 24 * 60 * 60 * 1000));
-                    date.toGMTString();
+                    var now = new Date();
+                    var exp = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
 
-                    document.cookie = "load-leagues=false;  path=/; expires=" + date + ";"
+                    document.cookie = 'LoadLeagues=1; expires=' + exp.toUTCString() + ' path=/;';
                 },
                 beforeSend: function () {
 
@@ -126,11 +119,20 @@ $(document).ready(function () {
 
     function showTableData() {
 
-        var cookienameLeagueTable = getCookie("load-table-" + dataTablePref);
 
-        if (cookienameLeagueTable == "false") {
-            loadLegueTable = false           
+        if (document.cookie && document.cookie.indexOf('load-table-' + dataTablePref + '=1') != -1) {
+            
+            console.log('cookie present');
+            loadLegueTable = false;
+            
+
+        } else {
+
+            console.log('cookie expired');
+            loadLegueTable = true;
+
         };
+
 
         $appBox.html($tableData);
 
@@ -149,7 +151,7 @@ $(document).ready(function () {
     $('body').on('click touch', '.select-league a', function () {
         dataTableUrl = $(this).data('table-url');
         dataTablePref = $(this).data('table-pref');
-        
+
         showTableData();
     });
 
@@ -229,11 +231,11 @@ $(document).ready(function () {
 
                 buildTable();
 
-                var date = new Date();
-                date.setTime(date.getTime() + (1 * 24 * 60 * 60 * 1000));
-                date.toGMTString();
+                var now = new Date();
+                var exp = new Date(now.getTime() + 1 * 24 * 60 * 60 * 1000);
 
-                document.cookie = "load-table-" + dataTablePref + "=false;  path=/; expires=" + date + ";"
+                document.cookie = 'load-table-' + dataTablePref + '=1; expires=' + exp.toUTCString() + ' path=/;';
+
             },
             beforeSend: function () {
 
@@ -253,8 +255,6 @@ $(document).ready(function () {
 
         });
     };
-
-
 
     $('.update-table').on('click touch', function (e) {
         e.preventDefault();

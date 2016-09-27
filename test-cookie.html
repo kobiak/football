@@ -1,0 +1,64 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Football Results</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+    <link type="text/css" href="css/style.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+</head>
+
+<body class="offline-page">
+    
+    <label for="expsecs">Cookie expiration in seconds:</label>
+    <input type="text" id="expsecs" value="5" />
+    <br />
+    <button id="setcookie">set cookie</button>
+    <button id="getcookie">get cookie</button>
+    <div id="cookiestatus">status</div>
+    
+    <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+    <script>
+        function set_cookie() {
+            var secs = parseInt($('#expsecs').val(), 10);
+            if (isNaN(secs)) {
+                secs = 5;
+            }
+            var now = new Date();
+            var exp = new Date(now.getTime() + secs * 1000);
+            var status = '';
+            document.cookie = 'ExpirationCookieTest=1; expires=' + exp.toUTCString();
+            if (document.cookie && document.cookie.indexOf('ExpirationCookieTest=1') != -1) {
+                status = 'Cookie successfully set. Expiration in ' + secs + ' seconds';
+            } else {
+                status = 'Cookie NOT set. Please make sure your browser is accepting cookies';
+            }
+
+            $('#cookiestatus').text(status);
+        }
+
+        function get_cookie() {
+            var status = '';
+            if (document.cookie && document.cookie.indexOf('ExpirationCookieTest=1') != -1) {
+                status = 'Cookie is present';
+            } else {
+                status = 'Cookie is NOT present. It may be expired, or never set';
+            }
+            $('#cookiestatus').text(status);
+        }
+
+        function init() {
+            $('#setcookie').bind('click', set_cookie);
+            $('#getcookie').bind('click', get_cookie);
+        }
+
+        $(init);
+    </script>
+
+</body>
+
+</html>
