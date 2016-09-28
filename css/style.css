@@ -371,3 +371,58 @@ nav ul li {
         min-height: 50px;
     }
 }
+
+.day-playes > div {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.day-playes > div > div {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.league-select-popup {
+    display: none;
+    position: fixed;
+    top: 48px;
+    width: 200px;
+    margin: 0 auto;
+    background: #333;
+}
+
+.league-select-popup .select-league {
+    display: flex;
+    flex-direction: column;
+    padding: 0 1rem;
+}
+
+.league-select-popup .select-league a {
+    display: block;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #999999;
+    color: #f0f0f0;
+    font-size: 0.75rem;
+    text-decoration: none;
+    margin-bottom: 0;
+    min-height: auto;
+    background: none;
+    border: none;
+    box-shadow: none;
+}
+
+.league-select-popup .select-league a:last-child {
+    border: none;
+}
+
+@media (max-width: 480px) {
+    .league-select-popup .select-league a {
+        display: block;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #999999;
+        color: #f0f0f0;
+        font-size: 0.75rem;
+        text-decoration: none;
+    }
+}

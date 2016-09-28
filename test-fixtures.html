@@ -1,0 +1,151 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Football Results</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+    <link type="text/css" href="css/style.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+</head>
+
+<body class="offline-page">
+
+    <div class="day">
+        <ul></ul>
+    </div>
+    <div class="day-playes">
+
+        <div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var newData = [];
+            $.ajax({
+                headers: {
+                    'X-Auth-Token': 'ad36d94a3eaf4dcf802b05c867b5e9e6'
+                },
+                url: 'http://api.football-data.org/v1/competitions/426/fixtures',
+                dataType: 'json',
+                type: 'GET',
+                success: function (appData) {
+
+                    newData.push(appData);
+
+                    // insert into text and leagues list
+                    /* $appBox.html($introScreen + $leagueScreen);*/
+
+                    // save response to localstorage
+                    /*var appData = JSON.stringify(response);
+                    localStorage.setItem('F', appData);
+                    var appData = JSON.parse(localStorage.getItem('Leagues'));*/
+
+                    console.log('use ajax - table screen');
+
+                    $.each(appData.fixtures, function (index) {
+
+                        var homeTeam = appData.fixtures[index].homeTeamName;
+                        var awayTeam = appData.fixtures[index].awayTeamName;
+                        var resultsHome = appData.fixtures[index].result.goalsHomeTeam;
+                        var resultsAway = appData.fixtures[index].result.goalsAwayTeam;
+
+
+                        $('.day-playes').append('<div><div>' + homeTeam + '</div><div>' + resultsHome + ' - ' + resultsAway + '</div><div>' + awayTeam + '</div></div>')
+
+
+                    });
+
+
+
+                },
+                beforeSend: function () {
+
+
+
+                },
+                complete: function () {
+
+
+                },
+                error: function () {
+
+                }
+
+            });
+
+            $.ajax({
+                headers: {
+                    'X-Auth-Token': 'ad36d94a3eaf4dcf802b05c867b5e9e6'
+                },
+                url: 'http://api.football-data.org/v1/competitions/426/teams',
+                dataType: 'json',
+                type: 'GET',
+                success: function (appData) {
+
+
+
+                    // insert into text and leagues list
+                    /* $appBox.html($introScreen + $leagueScreen);*/
+
+                    // save response to localstorage
+                    /*var appData = JSON.stringify(response);
+                    localStorage.setItem('F', appData);
+                    var appData = JSON.parse(localStorage.getItem('Leagues'));*/
+                    
+                    
+                    newData.push(appData);
+                    console.log(newData);
+                    
+
+                    console.log('use ajax - table screen');
+                    
+                    var useThis = newData[1];
+                    console.log(useThis);
+
+                    $.each(useThis.teams, function (index) {
+
+                        var teamName = useThis.teams[index].name;
+                        var teamNameShort = useThis.teams[index].shortName;
+                        var logoUrl = useThis.teams[index].crestUrl;
+                        
+                       /* console.log(teamName);
+                        console.log(teamNameShort);
+                        console.log(logoUrl);*/
+                        console.log(teamName);
+
+                    });
+
+
+
+                },
+                beforeSend: function () {
+
+
+
+                },
+                complete: function () {
+
+
+                },
+                error: function () {
+
+                }
+
+            });
+
+        })
+    </script>
+
+</body>
+
+</html>

@@ -23,15 +23,9 @@ $(document).ready(function () {
         // load leagues
 
         if (document.cookie && document.cookie.indexOf('LoadLeagues=1') != -1) {
-
             loadLeagues = false;
-            console.log('cookie');
-
         } else {
-
-            console.log('cookie expired');
             loadLeagues = true;
-
         };
 
         if ((localStorage.getItem('Leagues') !== null) && (!loadLeagues)) {
@@ -50,9 +44,10 @@ $(document).ready(function () {
                 var name = appData[index].caption;
                 var link = appData[index]._links.leagueTable.href;
                 var leagueName = appData[index].league;
+                var leagueFixture = appData[index]._links.fixtures.href;
 
                 $('.select-league').append('<a href="#" data-table-url="' + link + '" data-table-pref="' + leagueName + '">' + name + '</a>');
-
+                $('.leagues-list').append('<a href="#" data-table-url="' + link + '" data-table-pref="' + leagueName + '" data-fixture-url="' + leagueFixture + '">' + name + '</a>');
             });
 
 
@@ -81,9 +76,11 @@ $(document).ready(function () {
                     $.each(appData, function (index) {
                         var name = appData[index].caption;
                         var link = appData[index]._links.leagueTable.href;
+                        var leagueFixture = appData[index]._links.fixtures.href;
                         var leagueName = appData[index].league;
 
-                        $('.select-league').append('<a href="#" data-table-url="' + link + '" data-table-pref="' + leagueName + '">' + name + '</a>');
+                        $('.select-league').append('<a href="#" data-table-url="' + link + '" data-table-pref="' + leagueName + '" data-fixture-url="' + leagueFixture + '">' + name + '</a>');
+                        $('.leagues-list').append('<a href="#" data-table-url="' + link + '" data-table-pref="' + leagueName + '" data-fixture-url="' + leagueFixture + '">' + name + '</a>');
 
                     });
 
@@ -121,16 +118,9 @@ $(document).ready(function () {
 
 
         if (document.cookie && document.cookie.indexOf('load-table-' + dataTablePref + '=1') != -1) {
-            
-            console.log('cookie present');
             loadLegueTable = false;
-            
-
         } else {
-
-            console.log('cookie expired');
             loadLegueTable = true;
-
         };
 
 
@@ -151,7 +141,7 @@ $(document).ready(function () {
     $('body').on('click touch', '.select-league a', function () {
         dataTableUrl = $(this).data('table-url');
         dataTablePref = $(this).data('table-pref');
-
+        $('.league-select-popup').hide();
         showTableData();
     });
 
@@ -171,6 +161,8 @@ $(document).ready(function () {
     $('.table-button').on('click touch', function (e) {
         e.preventDefault();
 
+        $('body').addClass('league-table');
+
         tableScreen();
 
         showHideMenu();
@@ -181,6 +173,24 @@ $(document).ready(function () {
             document.location.href = "/";
         };
     });
+
+    $('.home-button').on('click touch', function (e) {
+        e.preventDefault();
+        showHideMenu();
+        $('.update-table').css('display', 'none');
+
+        $appBox.html('<section class="league-screen"><div class="select-league"><a href="#" data-table-url="http://api.football-data.org/v1/competitions/426/leagueTable" data-table-pref="PL">EPL 2016/17</a><a href="#" data-table-url="http://api.football-data.org/v1/competitions/427/leagueTable" data-table-pref="ELC">Championship 2016/17</a><a href="#" data-table-url="http://api.football-data.org/v1/competitions/436/leagueTable" data-table-pref="PD">La Liga 2016/17</a></div></section>');
+
+        $('body').removeClass('league-table');
+        $('body').removeClass('league-fixture');
+
+        if ($('body').hasClass('offline-page')) {
+            e.stopPropagation();
+            document.location.href = "/";
+        };
+    });
+
+
 
     function buildTable() {
         // clear table
@@ -259,6 +269,11 @@ $(document).ready(function () {
     $('.update-table').on('click touch', function (e) {
         e.preventDefault();
         runAjaxCall();
+    });
+
+    $('.league-name').on('click touch', function (e) {
+        e.preventDefault();
+        $('.league-select-popup').toggle();
     });
 
     if ('serviceWorker' in navigator) {
