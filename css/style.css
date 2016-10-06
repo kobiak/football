@@ -22,7 +22,7 @@ header {
     height: 3.000rem;
 }
 
-.top-nav > a {
+.top-nav>a {
     width: 3.000rem;
     display: flex;
     justify-content: center;
@@ -33,7 +33,7 @@ header {
 }
 
 .second-nav,
-.top-nav > a.update-table {
+.top-nav>a.update-table {
     display: none;
 }
 
@@ -228,7 +228,7 @@ nav ul li {
     justify-content: center;
 }
 
-.row > div {
+.row>div {
     flex: 0 0 auto;
     width: 1.6rem;
     display: flex;
@@ -372,15 +372,27 @@ nav ul li {
     }
 }
 
-.day-playes > div {
+.matchday-box > div {
     display: flex;
     flex-wrap: nowrap;
+    min-height: 2.5rem;
+    border-bottom:1px solid #e4e4e4;
+}
+.matchday-box > div:last-item {
+    border-bottom:none;
 }
 
-.day-playes > div > div {
+.matchday-box {
+    display: none;
+    font-size: 0.75rem;
+}
+
+.matchday-box>div>div {
     flex: 1;
     display: flex;
     justify-content: center;
+    text-align: center;
+    align-items: center;
 }
 
 .league-select-popup {
@@ -392,13 +404,13 @@ nav ul li {
     background: #333;
 }
 
-.league-select-popup .select-league {
+.league-select-popup .league-list {
     display: flex;
     flex-direction: column;
     padding: 0 1rem;
 }
 
-.league-select-popup .select-league a {
+.league-select-popup .league-list a {
     display: block;
     padding: 0.5rem 0;
     border-bottom: 1px solid #999999;
@@ -417,7 +429,7 @@ nav ul li {
 }
 
 @media (max-width: 480px) {
-    .league-select-popup .select-league a {
+    .league-select-popup .league-list a {
         display: block;
         padding: 0.5rem 0;
         border-bottom: 1px solid #999999;
@@ -426,3 +438,63 @@ nav ul li {
         text-decoration: none;
     }
 }
+
+.day ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: nowrap;
+    width: 100%;
+    overflow-x: scroll;
+}
+
+.day ul li {
+    width: 25%;
+    background-color: lightblue;
+    color: #fff;
+    display: flex;
+    flex: 0 0 auto;
+    justify-content: center;
+    height: 2rem;
+    align-items: center;
+    font-size: 0.75rem;
+    border-bottom:2px solid lightblue;
+    transition: all 0.2s linear;
+    cursor: pointer;
+}
+.day ul li.selected {
+    border-bottom:2px solid dodgerblue;
+}
+.select-league a.epl-home {
+    background-color:#38003C;
+    border-color: #38003C;
+    
+    
+}
+.select-league a.epl-home span {
+    background: url(https://resources-pl.pulselive.com/ver/i/sprites/global-sprite.png) no-repeat;
+    display: block;
+    width: 150px;
+    height: 29px;
+    background-position: -657px -262px;
+}
+
+.select-league a.laliga-home {
+    background-color:#4687D2;
+    border-color: #4687D2;
+   
+}
+.select-league a.laliga-home span {
+    background: url(http://statics.laliga.es/img/logo-laliga-claim.png) no-repeat;
+    display: block;
+    width: 150px;
+    height: 29px;
+    background-position: center center;
+    background-size: contain;
+}
+
+.home .league-screen {
+    padding-top:1rem;
+}
+

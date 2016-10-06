@@ -12,25 +12,27 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 </head>
 
-<body class="offline-page">
-
-    <div class="day">
-        <ul></ul>
-    </div>
-    <div class="day-playes">
-
-        <div>
-            <div></div>
-            <div></div>
-            <div></div>
+<body>
+    <section class="app-box">
+        <div class="day">
+            <ul></ul>
         </div>
-
-    </div>
-
+        <div class="day-playes"></div>
+    </section>
     <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
     <script>
-        $(document).ready(function () {
-            var newData = [];
+        $(document).ready(function() {
+            $('body').on('click touch', '.day li', function() {
+                var matchDayIndex = $(this).data('matchday');
+                $('.day li').removeClass('selected');
+                $(this).addClass('selected');
+
+                $('.matchday-box').hide();
+                $('.matchday-' + matchDayIndex).show();
+            });
+            
+            
+            
             $.ajax({
                 headers: {
                     'X-Auth-Token': 'ad36d94a3eaf4dcf802b05c867b5e9e6'
@@ -38,46 +40,63 @@
                 url: 'http://api.football-data.org/v1/competitions/426/fixtures',
                 dataType: 'json',
                 type: 'GET',
-                success: function (appData) {
+                success: function(fixtureData) {
 
-                    newData.push(appData);
+
 
                     // insert into text and leagues list
                     /* $appBox.html($introScreen + $leagueScreen);*/
 
                     // save response to localstorage
-                    /*var appData = JSON.stringify(response);
-                    localStorage.setItem('F', appData);
-                    var appData = JSON.parse(localStorage.getItem('Leagues'));*/
+                    /*var fixtureData = JSON.stringify(response);
+                    localStorage.setItem('F', fixtureData);
+                    var fixtureData = JSON.parse(localStorage.getItem('Leagues'));*/
 
                     console.log('use ajax - table screen');
 
-                    $.each(appData.fixtures, function (index) {
+                    var last = fixtureData.fixtures.slice(-1)[0];
+                    var matchDayLast = last.matchday;
 
-                        var homeTeam = appData.fixtures[index].homeTeamName;
-                        var awayTeam = appData.fixtures[index].awayTeamName;
-                        var resultsHome = appData.fixtures[index].result.goalsHomeTeam;
-                        var resultsAway = appData.fixtures[index].result.goalsAwayTeam;
+                    for (i = 1; i <= matchDayLast; i++) {
+
+                        var matchDayGames = fixtureData.fixtures.filter(function(obj) {
+                            return obj.matchday == i;
+                        });
+
+                        $('.day ul').append('<li data-matchday="' + i + '">Day ' + i + '</li>')
+
+                        $('.day-playes').append('<div class="matchday-box matchday-' + i + '"></div>')
+
+                        $.each(matchDayGames, function(index) {
+
+                            var homeTeam = matchDayGames[index].homeTeamName;
+                            var awayTeam = matchDayGames[index].awayTeamName;
+                            var resultsHome = matchDayGames[index].result.goalsHomeTeam;
+                            var resultsAway = matchDayGames[index].result.goalsAwayTeam;
+
+                            $('.matchday-' + i).append('<div><div>' + homeTeam + '</div><div>' + resultsHome + ' - ' + resultsAway + '</div><div>' + awayTeam + '</div></div>');
+
+                        });
 
 
-                        $('.day-playes').append('<div><div>' + homeTeam + '</div><div>' + resultsHome + ' - ' + resultsAway + '</div><div>' + awayTeam + '</div></div>')
-
-
-                    });
-
+                    };
 
 
                 },
-                beforeSend: function () {
+                beforeSend: function() {
 
-
-
-                },
-                complete: function () {
-
+                    $('.app-box').addClass('overlay');
+                    $('.app-box').append('<div class="overlay-box"><div class="loader"><svg viewBox="0 0 32 32" width="32" height="32"><circle id="spinner" cx="16" cy="16" r="14" fill="none"></circle></svg></div></div>')
 
                 },
-                error: function () {
+                complete: function() {
+                    $('.app-box').removeClass('overlay');
+                    $('.overlay-box').remove();
+                    $('.day li').first().addClass('selected');
+                    $('.matchday-box').first().show();
+
+                },
+                error: function() {
 
                 }
 
@@ -90,60 +109,61 @@
                 url: 'http://api.football-data.org/v1/competitions/426/teams',
                 dataType: 'json',
                 type: 'GET',
-                success: function (appData) {
+                success: function(teamsData) {
 
-
+                    console.log(teamsData);
 
                     // insert into text and leagues list
                     /* $appBox.html($introScreen + $leagueScreen);*/
 
                     // save response to localstorage
-                    /*var appData = JSON.stringify(response);
-                    localStorage.setItem('F', appData);
-                    var appData = JSON.parse(localStorage.getItem('Leagues'));*/
-                    
-                    
-                    newData.push(appData);
-                    console.log(newData);
-                    
-
-                    console.log('use ajax - table screen');
-                    
-                    var useThis = newData[1];
-                    console.log(useThis);
-
-                    $.each(useThis.teams, function (index) {
-
-                        var teamName = useThis.teams[index].name;
-                        var teamNameShort = useThis.teams[index].shortName;
-                        var logoUrl = useThis.teams[index].crestUrl;
-                        
-                       /* console.log(teamName);
-                        console.log(teamNameShort);
-                        console.log(logoUrl);*/
-                        console.log(teamName);
-
-                    });
+                    /*var fixtureData = JSON.stringify(response);
+                    localStorage.setItem('F', fixtureData);
+                    var fixtureData = JSON.parse(localStorage.getItem('Leagues'));*/
 
 
+                    /* newData.push(fixtureData);
+                     console.log(newData);
 
-                },
-                beforeSend: function () {
+
+                     console.log('use ajax - table screen');
+
+                     var useThis = newData[1];
+                     console.log(useThis);
+
+                     $.each(useThis.teams, function(index) {
+
+                         var teamName = useThis.teams[index].name;
+                         var teamNameShort = useThis.teams[index].shortName;
+                         var logoUrl = useThis.teams[index].crestUrl;
+
+                          console.log(teamName);
+                          console.log(teamNameShort);
+                          console.log(logoUrl);
+                         console.log(teamName);
+
+                     });*/
 
 
 
                 },
-                complete: function () {
+                beforeSend: function() {
+
 
 
                 },
-                error: function () {
+                complete: function() {
+
+
+                },
+                error: function() {
 
                 }
 
             });
 
         })
+
     </script>
 
 </body>

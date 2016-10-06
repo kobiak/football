@@ -2,7 +2,10 @@ $(document).ready(function () {
 
     'use strict';
 
-    $('body').css('padding-top', $('header').outerHeight());
+    var offsetHeight = $('header').outerHeight();
+
+    $('body').css('padding-top', offsetHeight);
+    $('body').css('height', 'calc(100% - ' + offsetHeight + 'px)');
 
     $('.second-nav a').on('click touch', function (e) {
         e.preventDefault();
@@ -18,6 +21,7 @@ $(document).ready(function () {
     var $leagueScreen = '<section class="league-screen"><div class="select-league"></div></section>';
     var $tableData = '<section class="table-data"><div class="table"></div></section>';
     var $tableHeader = '<div class="table-header"><div></div><div>P</div><div>W</div><div>D</div><div>L</div><div>GD</div><div>Pts</div></div>';
+    var $fixtures = '<div class="day"><ul></ul></div><div class="day-playes"></div>';
 
     function tableScreen() {
         // load leagues
@@ -46,8 +50,8 @@ $(document).ready(function () {
                 var leagueName = appData[index].league;
                 var leagueFixture = appData[index]._links.fixtures.href;
 
-                $('.select-league').append('<a href="#" data-table-url="' + link + '" data-table-pref="' + leagueName + '">' + name + '</a>');
-                $('.leagues-list').append('<a href="#" data-table-url="' + link + '" data-table-pref="' + leagueName + '" data-fixture-url="' + leagueFixture + '">' + name + '</a>');
+                $('.select-league').append('<a href="#" data-table-url="' + link + '" data-table-pref="' + leagueName + '" data-fixture-url="' + leagueFixture + '">' + name + '</a>');
+                $('.league-list').append('<a href="#" data-table-url="' + link + '" data-table-pref="' + leagueName + '" data-fixture-url="' + leagueFixture + '">' + name + '</a>');
             });
 
 
@@ -80,7 +84,7 @@ $(document).ready(function () {
                         var leagueName = appData[index].league;
 
                         $('.select-league').append('<a href="#" data-table-url="' + link + '" data-table-pref="' + leagueName + '" data-fixture-url="' + leagueFixture + '">' + name + '</a>');
-                        $('.leagues-list').append('<a href="#" data-table-url="' + link + '" data-table-pref="' + leagueName + '" data-fixture-url="' + leagueFixture + '">' + name + '</a>');
+                        $('.league-list').append('<a href="#" data-table-url="' + link + '" data-table-pref="' + leagueName + '" data-fixture-url="' + leagueFixture + '">' + name + '</a>');
 
                     });
 
@@ -101,18 +105,17 @@ $(document).ready(function () {
                     $('.overlay-box').remove();
                 },
                 error: function () {
-                    $('.app-box').hide();
-                    $('body').append('<section class="offline"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i><h3>API server is offline :(</h3></section>');
+                    $('.app-box').html('<section class="offline"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i><h3>API server is offline :(</h3></section>');
+
                 }
 
             });
         };
     };
 
-
-
     var dataTableUrl = '',
-        dataTablePref = '';
+        dataTablePref = '',
+        dataFixtureUrl = '';
 
     function showTableData() {
 
@@ -138,11 +141,19 @@ $(document).ready(function () {
 
     };
 
-    $('body').on('click touch', '.select-league a', function () {
+    $('body').on('click touch', '.select-league a, .table-list a', function () {
         dataTableUrl = $(this).data('table-url');
         dataTablePref = $(this).data('table-pref');
         $('.league-select-popup').hide();
         showTableData();
+    });
+
+    $('body').on('click touch', '.fixture-list a', function () {
+        
+        dataFixtureUrl = $(this).data('fixture-url');
+        dataTablePref = $(this).data('table-pref');
+        $('.league-select-popup').hide();
+        showFixtures();
     });
 
     function showHideMenu() {
@@ -161,35 +172,64 @@ $(document).ready(function () {
     $('.table-button').on('click touch', function (e) {
         e.preventDefault();
 
-        $('body').addClass('league-table');
+        if ($('body').hasClass('offline-page')) {
+            e.stopPropagation();
+            document.location.href = "/";
+            return '';
+        };
+
+        $('body').removeClass().addClass('league-table');
+        
+        $('.league-list').addClass('table-list').removeClass('fixture-list');
 
         tableScreen();
 
         showHideMenu();
         $('.update-table').css('display', 'none');
 
-        if ($('body').hasClass('offline-page')) {
-            e.stopPropagation();
-            document.location.href = "/";
-        };
+
     });
 
     $('.home-button').on('click touch', function (e) {
         e.preventDefault();
         showHideMenu();
+
         $('.update-table').css('display', 'none');
-
-        $appBox.html('<section class="league-screen"><div class="select-league"><a href="#" data-table-url="http://api.football-data.org/v1/competitions/426/leagueTable" data-table-pref="PL">EPL 2016/17</a><a href="#" data-table-url="http://api.football-data.org/v1/competitions/427/leagueTable" data-table-pref="ELC">Championship 2016/17</a><a href="#" data-table-url="http://api.football-data.org/v1/competitions/436/leagueTable" data-table-pref="PD">La Liga 2016/17</a></div></section>');
-
-        $('body').removeClass('league-table');
-        $('body').removeClass('league-fixture');
 
         if ($('body').hasClass('offline-page')) {
             e.stopPropagation();
             document.location.href = "/";
+            return '';
         };
+
+        $('body').removeClass().addClass('home');
+
+        $appBox.html('<section class="league-screen"><div class="select-league"><a href="#" data-table-url="http://api.football-data.org/v1/competitions/426/leagueTable" data-table-pref="PL" class="epl-home"><span></span></a><a href="#" data-table-url="http://api.football-data.org/v1/competitions/436/leagueTable" data-table-pref="PD" class="laliga-home"><span></span></a></div></section>');
+
+
+
+        $('.league-name').html('');
+
     });
 
+    $('.fixtures-button').on('click touch', function (e) {
+        e.preventDefault();
+        $('.update-table').hide();
+        $('.league-name').html('Select league');
+       
+        $('.league-list').removeClass('table-list').addClass('fixture-list');
+
+        if ($('body').hasClass('offline-page')) {
+            e.stopPropagation();
+            document.location.href = "/";
+            return '';
+        };
+
+        showHideMenu();
+        $('body').removeClass().addClass('fixtures');
+        $appBox.html($fixtures);
+
+    });
 
 
     function buildTable() {
@@ -266,6 +306,88 @@ $(document).ready(function () {
         });
     };
 
+    $('body').on('click touch', '.day li', function () {
+        var matchDayIndex = $(this).data('matchday');
+        $('.day li').removeClass('selected');
+        $(this).addClass('selected');
+
+        $('.matchday-box').hide();
+        $('.matchday-' + matchDayIndex).show();
+    });
+
+    function showFixtures() {
+        $.ajax({
+            headers: {
+                'X-Auth-Token': 'ad36d94a3eaf4dcf802b05c867b5e9e6'
+            },
+            url: dataFixtureUrl,
+            dataType: 'json',
+            type: 'GET',
+            success: function (fixtureData) {
+
+                $('.day ul').html('');
+                $('.day-playes').html('');
+
+                // insert into text and leagues list
+                /* $appBox.html($introScreen + $leagueScreen);*/
+
+                // save response to localstorage
+                /*var fixtureData = JSON.stringify(response);
+                localStorage.setItem('F', fixtureData);
+                var fixtureData = JSON.parse(localStorage.getItem('Leagues'));*/
+
+                console.log('use ajax - table screen');
+
+                var last = fixtureData.fixtures.slice(-1)[0];
+                var matchDayLast = last.matchday;
+                var i = 0;
+
+                for (i = 1; i <= matchDayLast; i++) {
+
+                    var matchDayGames = fixtureData.fixtures.filter(function (obj) {
+                        return obj.matchday == i;
+                    });
+
+                    $('.day ul').append('<li data-matchday="' + i + '">Day ' + i + '</li>')
+
+                    $('.day-playes').append('<div class="matchday-box matchday-' + i + '"></div>')
+
+                    $.each(matchDayGames, function (index) {
+
+                        var homeTeam = matchDayGames[index].homeTeamName;
+                        var awayTeam = matchDayGames[index].awayTeamName;
+                        var resultsHome = matchDayGames[index].result.goalsHomeTeam;
+                        var resultsAway = matchDayGames[index].result.goalsAwayTeam;
+
+                        $('.matchday-' + i).append('<div><div>' + homeTeam + '</div><div>' + resultsHome + ' - ' + resultsAway + '</div><div>' + awayTeam + '</div></div>');
+
+                    });
+
+
+                };
+
+
+            },
+            beforeSend: function () {
+
+                $('.app-box').addClass('overlay');
+                $('.app-box').append('<div class="overlay-box"><div class="loader"><svg viewBox="0 0 32 32" width="32" height="32"><circle id="spinner" cx="16" cy="16" r="14" fill="none"></circle></svg></div></div>')
+
+            },
+            complete: function () {
+                $('.app-box').removeClass('overlay');
+                $('.overlay-box').remove();
+                $('.day li').first().addClass('selected');
+                $('.matchday-box').first().show();
+
+            },
+            error: function () {
+
+            }
+
+        });
+    };
+
     $('.update-table').on('click touch', function (e) {
         e.preventDefault();
         runAjaxCall();
@@ -275,6 +397,7 @@ $(document).ready(function () {
         e.preventDefault();
         $('.league-select-popup').toggle();
     });
+
 
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker
